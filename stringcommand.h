@@ -5,6 +5,7 @@
 void dnewdir();
 void dnew();
 void dedit();
+void dread();
 void ddel();
 void dlist();
 void getinput(bool&);
