@@ -1,62 +1,10 @@
 #include "stdafx.h"
-#include <iostream>
-
 using namespace std;
 
-command::command()	//opening screen
+void getinput(bool &endbool)
 {
-	endbool = false;
-}
+	char commandinput[2];
 
-command::~command()
-{
-	fclose(file_database);
-}
-
-void command::dnewdir()
-{
-	cout << "Enter new directory name: ";
-	char *filename = new char;
-	cin >> *filename;
-	file_database = fopen("c:\\DATABASE_TEST\\Simple_Database\\directory\\testfile.bin", "w");	
-	
-	//file in directory stores info about which files in data_files belong to which subject
-	fclose(file_database);
-
-	delete filename;
-}
-
-void command::dnew()
-{
-	file_database = fopen("c:\\DATABASE_TEST\\Simple_Database\\data_files\\testfile.bin", "w");
-	//write to file
-	fclose(file_database);
-}
-
-void command::dedit()
-{
-	//edit existing file
-}
-
-void command::ddel()
-{
-	//delete file
-}
-
-void command::dlist()
-{
-	//list all data
-}
-
-void command::dexit()
-{
-	this->endbool = true;
-}
-
-void command::getinput()
-{
-	int x = 0;
-	//subject (login) (later)
 	do
 	{
 		cout << "Choose a function" << endl;
@@ -66,51 +14,159 @@ void command::getinput()
 		cout << "4 : Delete file" << endl;
 		cout << "5 : List all files" << endl;
 		cout << "6 : Exit program" << endl;
+		cout << "\n\n\n\n\n\n\n\n\n\n\n\n" << endl;
 
-		char *input = new char;
-		cin >> *input;	
-		//scanf("%c", input);	//figure out why this won't work
 
+		scanf("%1s", commandinput);
+		//scanf("%9s", commandinput);	//doing again will put whatever is left in buffer into the array
 		//change to take in more strings later
-
-		printf("\n\n\n\n\n\n\n");	//cleans up terminal
-
-		this->choose(*input);
 		
-		delete input;
+		cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n" << endl;	//new lines
 
-	} while(this->endbool == false);
+		switch(commandinput[0])
+		{
+			case '1':
+				dnewdir();
+				break;
+
+			case '2':
+				dnew();
+				break;
+
+			case '3':
+				dedit();
+				break;
+
+			case '4':
+				ddel();
+				break;
+
+			case '5':
+				dlist();
+				break;
+	
+			case '6':
+				endbool = true;
+				break;
+	
+			default:
+				cout << "\nInput not recognized\n" << endl;
+				break;
+		}
+		//scanf("%9s", commandinput);	//doing this again will input second string into the array
+	} while(endbool == false);
 }
 
-void command::choose(char input) //choose function
+void dnewdir()
 {
-	switch(input)
+	FILE *file_database;
+	char filenameinput[64];
+	cout << "Enter new directory name: ";
+	scanf("%63s", filenameinput);	//input name
+	
+	char filename[256];
+	
+	strcpy(filename, "c:\\DATABASE_TEST\\Simple_Database\\directory\\");	//creating directory path text (change "DATABASE_TEST" later)
+	strcat(filename, filenameinput);
+	strcat(filename, ".bin");
+
+	cout << filename << endl;
+
+	file_database = fopen(filename, "w");	//create directory file
+	
+	//file in directory stores info about which files in data_files belong to which subject
+	fclose(file_database);
+
+	cout << "Directory '" << filenameinput << "' has been created" << endl;
+	cout << "\n\n\n\n" << endl;
+}
+
+void dnew()
+{
+	FILE *file_database;
+	char filenameinput[64];
+	cout << "Enter new file name: ";
+	scanf("%63s", filenameinput);	//input name
+
+	char filename[256];
+
+	strcpy(filename, "c:\\DATABASE_TEST\\Simple_Database\\data_files\\");	//creating directory path text (change "DATABASE_TEST" later)
+	strcat(filename, filenameinput);
+	strcat(filename, ".bin");
+
+	cout << filename << endl;
+
+	file_database = fopen(filename, "w");	//create directory file
+
+											//file in directory stores info about which files in data_files belong to which subject
+	fclose(file_database);
+
+	cout << "File '" << filenameinput << "' has been created" << endl;
+	cout << "\n\n\n\n" << endl;
+}
+
+void dedit()
+{
+	FILE *file_database;
+	char filenameinput[64];
+	char filename[256];
+
+	cout << "Delete directory (1) or data file (2)? ";
+	scanf("%1s", filename);
+
+	cout << "Enter data name: ";
+	scanf("%63s", filenameinput);	//input name
+
+	if (strcmp(filename, "1") == 0)
 	{
-	case '1':
-		this->dnewdir();
-		break;
-	case '2':
-		this->dnew();
-		break;
-
-	case '3':
-		this->dedit();
-		break;
-
-	case '4':
-		this->ddel();
-		break;
-
-	case '5':
-		this->dlist();
-		break;
-
-	case '6':
-		this->dexit();
-		break;
-
-	default:
-		printf("\nInput not recognized\n");
-		break;
+		strcpy(filename, "c:\\DATABASE_TEST\\Simple_Database\\directory\\");	//creating directory path text (change "DATABASE_TEST" later)
+		strcat(filename, filenameinput);
+		strcat(filename, ".bin");
 	}
+	else if (strcmp(filename, "2") == 0)
+	{
+		strcpy(filename, "c:\\DATABASE_TEST\\Simple_Database\\data_files\\");	//creating directory path text (change "DATABASE_TEST" later)
+		strcat(filename, filenameinput);
+		strcat(filename, ".bin");
+	}
+	file_database = fopen(filename, "w");
+
+
+}
+
+void ddel()
+{
+	char filenameinput[64];
+	char filename[256];
+
+	cout << "Delete directory (1) or data file (2)? ";
+	scanf("%1s", filename);
+
+	if(strcmp(filename, "1") == 0)
+	{
+		cout << "Enter directory name: ";
+		scanf("%63s", filenameinput);	//input name
+		strcpy(filename, "c:\\DATABASE_TEST\\Simple_Database\\directory\\");	//creating directory path text (change "DATABASE_TEST" later)
+		strcat(filename, filenameinput);
+		strcat(filename, ".bin");
+	}
+	else if(strcmp(filename, "2") == 0)
+	{
+		cout << "Enter file name: ";
+		scanf("%63s", filenameinput);	//input name
+		strcpy(filename, "c:\\DATABASE_TEST\\Simple_Database\\data_files\\");	//creating directory path text (change "DATABASE_TEST" later)
+		strcat(filename, filenameinput);
+		strcat(filename, ".bin");
+	}
+	remove(filename);
+	cout << filename << endl;
+
+
+	cout << "Data '" << filenameinput << "' has been deleted" << endl;
+	cout << "\n\n\n\n" << endl;
+}
+
+void dlist()
+{
+	//list all data
 }
